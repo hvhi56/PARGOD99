@@ -153,6 +153,14 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = message.text or message.caption
     has_video = message.video is not None
 
+    # 🚫 ביטול הודעות שמכילות מילים אסורות
+    FORBIDDEN_WORDS = ["להטב", "האח הגדול", "גיי", "עבירות", "קטינה", "גבר", "אירוויזיון", "אישה", "אשה בת", "קטינות", "בקטינה", "מינית", "מיניות", "מעשה מגונה", "להטב", "להטבים", "להט\"ב", "להטב״ים","באח הגדול"]
+    if text:
+        lowered = text.lower()
+        if any(word in lowered for word in FORBIDDEN_WORDS):
+            print("🚫 ההודעה לא תועלה כי מכילה מילים אסורות.")
+            return
+
     # ⬅️ שלב 1: קודם מעלים את הווידאו (כדי שיושמע אחרי)
     if has_video:
         video_file = await message.video.get_file()
